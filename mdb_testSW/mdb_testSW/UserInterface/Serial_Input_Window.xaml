@@ -1,0 +1,19 @@
+﻿<controls:MetroWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls" x:Class="mdb_testSW.UserInterface.Serial_Input_Window"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:mdb_testSW.UserInterface"
+    mc:Ignorable="d"
+    WindowStartupLocation="CenterScreen"
+    Title="Input Serial Number" Height="300" Width="300">
+    <DockPanel HorizontalAlignment="Stretch"  LastChildFill="True">
+        <StackPanel   VerticalAlignment="Center">
+            <Label HorizontalAlignment="Right" Margin="5,5,5,5" Content="Input Serial Number"></Label>
+            <TextBox Name="serial_number_txtbox" Margin="5,5,5,5" MaxLength="10" PreviewTextInput="NumberValidationTextBox" ></TextBox>
+            <Button Margin="5,5,5,5" HorizontalAlignment="Center" Content="Ok" Width="50" Click="Button_Click" IsDefault="True" ></Button>
+            <Button Margin="5,5,5,5" HorizontalAlignment="Center" Content="Cancel" Width="50" Click="Cancel_Click"></Button>
+        </StackPanel>
+    </DockPanel>
+</controls:MetroWindow>
