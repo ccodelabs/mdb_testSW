@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace mdb_testSW
 {
@@ -72,7 +71,17 @@ namespace mdb_testSW
                 case 4: text_to_update = "DEVICE CURRENT"; break;
                 case 5: text_to_update = "USB PORT A"; break;
             }
-            list_itens.Insert(index_list, new Test_list_item() { Name = text_to_update, Path = (test_status) ? @"../images/pass.png" : @"../images/fail.png" });
+            var _assembly = Assembly.GetExecutingAssembly();
+
+            var myImage = _assembly.GetManifestResourceStream("fail.png");
+
+            List<string> resources = new List<string>(AssemblyBuilder.GetExecutingAssembly().GetManifestResourceNames());
+
+            var image_test = Properties.Resources.ResourceManager.GetObject("fail.png");
+
+            var image_path = _assembly.GetManifestResourceStream(resources.Find(target => target.ToLower().Contains("pass.png")));
+
+            list_itens.Insert(index_list, new Test_list_item() { Name = text_to_update, Path = @"images/pass.png".ToString() });
         }
 
         public override void StartTesting()

@@ -1,27 +1,16 @@
 ﻿using MahApps.Metro.Controls;
 using mdb_testSW.UserInterface;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace mdb_testSW
@@ -60,43 +49,46 @@ namespace mdb_testSW
                 SetStartButtonState(true);
                 return;
             }
-            MDB_Board = new MDB_BOARD(new Init_State());
-            MDB_Board.BoardOperator = operator_txtbox.Text;
-            MDB_Board.BoardWorkstation = combo_workStation.Text;
-            MDB_Board.SerialNumber = GetSerialNumber();
-            MDB_Board.BoardErrorDescription = "No Errors";
+            MDB_Board = new MDB_BOARD(new Init_State())
+            {
+                BoardOperator = operator_txtbox.Text,
+                BoardWorkstation = combo_workStation.Text,
+                SerialNumber = GetSerialNumber(),
+                BoardErrorDescription = "No Errors"
+            };
             MDB_Board.ConnectToMysql(server, database, uid, password);
 
-
+            //Check for a Valid DB Connection - Error Exit Program
             if (!UpdateDBConnectionBox())
             {
                 MessageBox.Show("Error Connecting to Database", "Check Database configuration", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 SetStartButtonState(true);
                 return;
             }
-
+            //Check for a valid Serial Number or a Repeated One - Error Exit Program
             if (String.IsNullOrEmpty(MDB_Board.SerialNumber) || MDB_Board.CheckRepeatedTest())
             {
                 MessageBox.Show("Error In Serial Number", "Repeated Serial Number", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 SetStartButtonState(true);
                 return;
             }
-
+            //So far so good...
             ResetProgressBar();
+            //Assign Serial Communication Ports
             MDB_Board.RS232Port = SerialCom.SelectedItem.ToString();
             MDB_Board.NucleoSerialCommunication(CurrentPort.SelectedItem.ToString());
-
+            //Validate Serial Ports - Error Exit Program
             if (!MDB_Board.CorrectPortConfig())
             {
-                //Debug.WriteLine("Porta: "+ MDB_Board.SerialPort);
                 MDB_Board.CloseSerialPort();
                 MessageBox.Show("Wrong Port Selection", "Wrong Fields", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 SetStartButtonState(true);
                 return;
             }
+            //Set Correct Power Supply
             MDB_Board.SetMDBSupply();
             //Everything is Ok
-            //Start Testing with scripts
+            //Start Testing with scripts in a Thread
             try
             {
                 MDB_Board.InitializeList();
@@ -117,7 +109,6 @@ namespace mdb_testSW
 
         private string GetSerialNumber()
         {
-            //Get Serial Number
             SetStartButtonState(false);
             Serial_Input_Window serialWindow = new Serial_Input_Window();
 
@@ -134,7 +125,6 @@ namespace mdb_testSW
                 SetStartButtonState(true);
                 return null;
             }
-            MDB_Board.SerialNumber = SerialNumber;
             return SerialNumber;
         }
 
@@ -148,7 +138,7 @@ namespace mdb_testSW
 
         private bool CheckIfFormComplete()
         {
-            if (string.IsNullOrWhiteSpace(operator_txtbox.Text) || combo_workStation.SelectedItem == null || SerialCom.SelectedItem == null || CurrentPort.SelectedItem == null)
+            if (string.IsNullOrWhiteSpace(operator_txtbox.Text) || combo_workStation.SelectedItem == null || SerialCom.SelectedItem == null || CurrentPort.SelectedItem == null || (SerialCom.SelectedItem.ToString() == CurrentPort.SelectedItem.ToString()))
                 return false;
             else
                 return true;

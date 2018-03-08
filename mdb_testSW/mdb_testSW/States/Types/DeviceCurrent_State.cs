@@ -12,25 +12,43 @@ namespace mdb_testSW
     class DeviceCurrent : State
     {
         string device_current;
+        string usb_volt;
         public override void Handle(MDB_BOARD board)
         {
-
             //throw new NotImplementedException();
             if (board.NucleoPort == null)
                 GoToNextState(board, false);
-            board.SendToNucleo("1");
-            Thread.Sleep(100);
-            if (board.NucleoMessage != null)
+            else
             {
-                device_current = board.NucleoMessage;
-                board.BoardCurrent = Regex.Match(board.NucleoMessage, @"\d+").Value;
-                Debug.WriteLine(board.BoardCurrent + "mA");
-                board.SetMDBSupply();
+                board.NucleoMessage = "";
+                Thread.Sleep(1500);
+                board.SendToNucleo("1");
+                Thread.Sleep(1500);
+                if (board.NucleoMessage != null)
+                {
+                    device_current = board.NucleoMessage;
+                    board.BoardCurrent = Regex.Match(board.NucleoMessage, @"\d+").Value;
+                    Debug.WriteLine(board.BoardCurrent + "mA");
+                    board.SetMDBSupply();
+                }
+
+                board.NucleoMessage = "";
+                Thread.Sleep(1500);
+                board.SendToNucleo("5");
+                Thread.Sleep(1500);
+                if (board.NucleoMessage != null)
+                {
+                    usb_volt = board.NucleoMessage;
+                    board.BoardCurrent = Regex.Match(board.NucleoMessage, @"\d+").Value;
+                    Debug.WriteLine(usb_volt + "mV");                   
+                }
+
+                if (board.BoardCurrent != null)
+                {
+                    GoToNextState(board, true);
+                }
             }
-            if (board.BoardCurrent != null)
-            {
-                GoToNextState(board, true);
-            }
+            
 
         }
 

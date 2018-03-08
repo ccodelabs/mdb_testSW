@@ -9,7 +9,19 @@
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     TitlebarHeight="40" 
-    Title="MainWindow" Height="720" Width="1024">
+    Title="MDB Test System" Height="720" Width="1024">
+    <Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Grid Width="{TemplateBinding Width}"
+                 Height="{TemplateBinding Height}"
+                 Margin="4"
+                 Background="Transparent"
+                 RenderOptions.EdgeMode="Aliased"
+                 RenderOptions.BitmapScalingMode="HighQuality">
+                <Image Source="/images/mainIcon.ico"></Image>
+            </Grid>
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
     <DockPanel HorizontalAlignment="Stretch" Margin="40,40,20,20">
         <Grid >
             <Grid.RowDefinitions>
@@ -60,11 +72,7 @@
                 </ComboBox>
             </DockPanel>
             <DockPanel Grid.Row="6"  Margin="20,20,20,20" Grid.Column="0" >
-                <Image HorizontalAlignment="Center" MinWidth="250">
-                    <Image.Source>
-                        <BitmapImage  UriSource="/Files/logo.png" />
-                    </Image.Source>
-                </Image>
+                <Image HorizontalAlignment="Center" MinWidth="250" Source="/images/logo.png"/>
             </DockPanel>
             <StackPanel  Margin="5,5,5,5" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
                 <TextBlock FontSize="16" Text="Test Historic:" ></TextBlock>
